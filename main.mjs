@@ -9,7 +9,7 @@ client.on('ready', () => {
 });
 
 client.on("messageCreate", async (msg) => {
-    if(!msg.flags.has(1) && !msg.content.startsWith("!")) return
+    if(!msg.flags.has(1)) return
 
     const t = await translate(msg.content)
     await msg.channel.send(t)
