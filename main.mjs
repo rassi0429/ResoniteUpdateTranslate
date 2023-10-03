@@ -17,11 +17,10 @@ client.on("messageCreate", async (msg) => {
     await msg.channel.send(t)
 
     console.log(msg)
-    // get crosspost channel name
-    const crosspostChannel = msg.channel.name.split("-")[1]
+    // get crosspost from server name
 
 
-    await sendWebHook(process.env.WEBHOOKS, t, crosspostChannel)
+    await sendWebHook(process.env.WEBHOOKS, t, msg.author.username, message.author.avatarURL() ?? null)
 });
 
 
@@ -33,13 +32,13 @@ async function translate(text) {
     return t
 }
 
-async function sendWebHook(url, text, channelName) {
+async function sendWebHook(url, text, channelName, avatarURL) {
     const res = await fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ "username": channelName, "content": text })
+        body: JSON.stringify({ "username": channelName, "content": text, "avatar_url": avatarURL })
     })
     return res
 }
