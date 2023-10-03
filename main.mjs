@@ -20,7 +20,7 @@ client.on("messageCreate", async (msg) => {
     // get crosspost from server name
 
 
-    await sendWebHook(process.env.WEBHOOKS, t, msg.author.username, message.author.avatarURL() ?? null)
+    await sendWebHook(process.env.WEBHOOKS, t, msg.author.username, msg.author.avatarURL() ?? null)
 });
 
 
