@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from 'discord.js';
-import openai, { Configuration, OpenAIApi } from "openai"
+import OpenAI from 'openai';
 
 const client = new Client({
     intents: [
@@ -8,9 +8,10 @@ const client = new Client({
         GatewayIntentBits.MessageContent]
 });
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
 });
+
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -31,7 +32,7 @@ client.on("messageCreate", async (msg) => {
 client.login(process.env.D_TOKEN);
 
 async function translate(text) {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
         model: "gpt-4",
         messages: [
             { "role": "system", "content": "以下のリリースノートを日本語に翻訳してください。　返答は翻訳内容だけで大丈夫です。 issueはissueのままで大丈夫です。" },
