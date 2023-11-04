@@ -40,8 +40,7 @@ async function translate(text) {
         ],
     });
 
-    const reply = completion.data.choices[0].message.content;
-    console.log(reply.slice(0, 10), completion.data.usage.total_tokens)
+    const reply = completion.choices[0].message.content
     return reply
 }
 
