@@ -26,6 +26,9 @@ client.on("messageCreate", async (msg) => {
     console.log(msg)
 
     await sendWebHook(process.env.WEBHOOKS, t, msg.author.username, msg.author.avatarURL() ?? null)
+
+    await createNote(`## ${msg.author.username}
+${t}`)
 });
 
 
@@ -53,4 +56,19 @@ async function sendWebHook(url, text, channelName, avatarURL) {
         body: JSON.stringify({ "username": channelName, "content": text, "avatar_url": avatarURL })
     })
     return res
+}
+
+async function createNote(str) {
+    const res = await fetch("https://misskey.resonite.love/api/notes/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "i": process.env.MISSKEY_API_KEY,
+            text: str,
+        })
+    })
+    const json = await res.json()
+    return json
 }
