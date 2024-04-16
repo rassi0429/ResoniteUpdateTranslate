@@ -35,7 +35,7 @@ async function translate(text) {
     const completion = await openai.chat.completions.create({
         model: "gpt-4",
         messages: [
-            { "role": "system", "content": "以下のリリースノートを日本語に翻訳してください。　返答は翻訳内容だけで大丈夫です。 issueはissueのままで大丈夫です。" },
+            { "role": "system", "content": "以下のリリースノートを日本語に翻訳してください。　返答は翻訳内容だけで大丈夫です。 issueはissueのままで大丈夫です。--などのMarkDownのインデントは、スペース2個- に変更して、正常なMarkDownにしてください。" },
             { "role": "user", "content": text }
         ],
     });
