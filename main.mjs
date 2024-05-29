@@ -25,10 +25,14 @@ client.on("messageCreate", async (msg) => {
 
     console.log(msg)
 
-    await sendWebHook(process.env.WEBHOOKS, t, msg.author.username, msg.author.avatarURL() ?? null)
+    try {
+        await sendWebHook(process.env.WEBHOOKS, t, msg.author.username, msg.author.avatarURL() ?? null)
+    } finally {}
 
-    await createNote(`## ${msg.author.username}
-${t}`)
+
+    try {
+        await createNote(`## ${msg.author.username}${t}`)
+    } finally {}
 });
 
 
@@ -48,15 +52,22 @@ async function translate(text) {
 }
 
 async function sendWebHook(url, text, channelName, avatarURL) {
-    const res = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ "username": channelName, "content": text, "avatar_url": avatarURL })
-    })
-    return res
+    const maxLength = 2000;  // WebHookで許可される最大文字数
+    for (let start = 0; start < text.length; start += maxLength) {
+        const chunk = text.substring(start, start + maxLength);  // テキストを分割
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ "username": channelName, "content": chunk, "avatar_url": avatarURL })
+        });
+        if (!res.ok) {  // 応答が失敗を示している場合はエラーを投げる
+            throw new Error(`Failed to send message: ${res.status} ${res.statusText}`);
+        }
+    }
 }
+
 
 async function createNote(str) {
     const res = await fetch("https://misskey.resonite.love/api/notes/create", {
