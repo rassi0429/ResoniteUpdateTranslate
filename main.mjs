@@ -26,7 +26,10 @@ client.on("messageCreate", async (msg) => {
     console.log(msg)
 
     try {
-        await sendWebHook(process.env.WEBHOOKS, t, msg.author.username, msg.author.avatarURL() ?? null)
+        const webhooks = (process.env.WEBHOOKS || "").split(",").map(x => x.trim()).filter(x => x);
+        for (const url of webhooks) {
+            await sendWebHook(url, t, msg.author.username, msg.author.avatarURL() ?? null);
+        }
     } finally {}
 
 
