@@ -1,5 +1,8 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import OpenAI from 'openai';
+import {config} from "dotenv"
+
+config()
 
 const client = new Client({
     intents: [
